@@ -40,6 +40,7 @@ function preload() {
   gameOverText = loadImage('images/gameOver.png');
   cloudImg = loadImage('images/cloud.png');
   terrain_1 = loadImage('images/terrain_1.png')
+  terrain_2 = loadImage('images/terrain_2.png')
 
 }
 
@@ -114,6 +115,12 @@ function draw() {
 
   if (!dino.dead) {
 
+    for (let dirt of dirts) {
+
+      dirt.move();
+      dirt.show();
+    }
+
     for (let i = terrains.length - 1; i >= 0; i--) {
       terrains[i].move();
       terrains[i].show();
@@ -123,12 +130,6 @@ function draw() {
 
     dino.show();
     dino.move();
-
-    for (let dirt of dirts) {
-
-      dirt.move();
-      dirt.show();
-    }
 
     for (let i = obstacles.length - 1; i >= 0; i--) {
 
@@ -228,7 +229,7 @@ function resetParameters() {
   dino.gravity = 2;
   dino.y = dino.base;
   obstacles = [];
-  terrains= [];
+  terrains = [];
   obstacleTimer = 0;
   randAddition = 0;
   dino.dead = false;
@@ -236,21 +237,21 @@ function resetParameters() {
 }
 
 function gameOverAnimation() {
-
-  dino.show();
-  dino.move();
-
+  for (let d of dirts) {
+    d.show();
+  }
   for (let t of terrains) {
     t.show();
   }
+  dino.show();
+  dino.move();
+
   for (let c of obstacles) {
     c.vx = 0;
     c.show();
     c.move();
   }
-  for (let d of dirts) {
-    d.show();
-  }
+
 
   push();
   imageMode(CENTER);
