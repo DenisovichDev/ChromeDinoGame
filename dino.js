@@ -16,10 +16,7 @@ class Dino {
   jump() {
     this.jumping = true;
     this.run = false;
-    if (!this.dead)
-      this.vy = -30;
-    else 
-      this.vy = 0;
+    this.vy = -30;
   }
 
   hits(obstacle) {
@@ -31,7 +28,7 @@ class Dino {
     if (this.y < this.base)
       this.vy += this.gravity;
     else
-      this.vy = 0;    
+      this.vy = 0;
 
     this.y = constrain(this.y, 0, this.base);
 

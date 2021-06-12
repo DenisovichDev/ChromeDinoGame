@@ -1,3 +1,5 @@
+// Made by Bhaswar Chakraborty (github.com/ivan-denisovich-py)
+
 let dino;
 let dinoRun_1;
 let dinoRun_2;
@@ -48,20 +50,16 @@ function setup() {
   gapFromBottom = 50;
   refFrame = height - gapFromBottom;
   ground = refFrame - 15;
-  //console.log(windowWidth);
   dino = new Dino();
 
   createDirt(windowWidth * dirtDensityInPerPixels);
-
-  //console.log(dirts.length)
-
 
 }
 
 
 
 function keyPressed() {
-  if (key == ' ' && !dino.jumping) {
+  if (key == ' ' && !dino.jumping && !dino.dead) {
     dino.jump();
     console.log('jump')
   }
@@ -153,8 +151,6 @@ function draw() {
       resetParameters();
     }
   }
-
-  //console.log(dirts.length);
 
 }
 
