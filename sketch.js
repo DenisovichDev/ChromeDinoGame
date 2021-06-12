@@ -15,6 +15,7 @@ let terrain_1;
 let obstacles = [];
 let clouds = [];
 let dirts = [];
+let terrains = [];
 
 let dirtDensityInPerPixels = 0.051;
 
@@ -36,21 +37,21 @@ function preload() {
   replayButton = loadImage('images/replayButton.png');
   gameOverText = loadImage('images/gameOver.png');
   cloudImg = loadImage('images/cloud.png');
-  terrain_1 = loadImage('images/terrain_1.jpg')
+  terrain_1 = loadImage('images/terrain_1.png')
 
 }
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
-  
-  
+
+
   gapFromBottom = 50;
   refFrame = height - gapFromBottom;
   ground = refFrame - 15;
   //console.log(windowWidth);
   dino = new Dino();
 
-  createDirt(windowWidth*dirtDensityInPerPixels);
+  createDirt(windowWidth * dirtDensityInPerPixels);
 
   //console.log(dirts.length)
 
@@ -84,19 +85,25 @@ let cloudTimer = 0;
 let randCloudAddition = 40;
 let minTimeBetweenClouds = 50;
 
+//terrain
+let terrainTimer = 0;
+let randTerrainAddition = 70;
+let minTimeBetweenTerrains = 20;
+
 function draw() {
-  //console.log(clouds.length)
+  console.log(terrains.length)
   updateObstacles();
   updateClouds();
+  updateTerrain();
 
 
   background(255);
 
-  for (let cloud of clouds) {
-    cloud.move();
-    cloud.show();
+  for (let i = clouds.length - 1; i >= 0; i--) {
+    clouds[i].move();
+    clouds[i].show();
 
-    deleteClouds(cloud);
+    deleteClouds(i);
   }
 
 
@@ -105,33 +112,40 @@ function draw() {
   stroke(0);
   strokeWeight(2);
   line(0, ground, width, ground);
-  image(terrain_1, 400, ground - 12);
   pop();
 
   if (!dino.dead) {
+
+    for (let i = terrains.length - 1; i >= 0; i--) {
+      terrains[i].move();
+      terrains[i].show();
+
+      deleteTerrain(i);
+    }
 
     dino.show();
     dino.move();
 
     for (let dirt of dirts) {
-      
+
       dirt.move();
       dirt.show();
     }
 
-    for (let c of obstacles) {
+    for (let i = obstacles.length - 1; i >= 0; i--) {
 
-      c.move();
-      c.show();
+      obstacles[i].move();
+      obstacles[i].show();
 
-      deleteObstacle(c);
-
-      if (dino.hits(c)) {
+      if (dino.hits(obstacles[i])) {
         console.log('game over');
         dino.dead = true;
         dino.gravity = 0;
         dino.vy = 0;
       }
+
+      deleteObstacle(i);
+
     }
   } else {
     gameOverAnimation();
@@ -160,6 +174,14 @@ function updateClouds() {
   }
 }
 
+function updateTerrain() {
+  terrainTimer++;
+
+  if (terrainTimer > minTimeBetweenTerrains + randTerrainAddition) {
+    addTerrain();
+  }
+}
+
 function addObstacles() {
   let typeInput = floor(random(3));
   randAddition = floor(random(50));
@@ -173,20 +195,32 @@ function addClouds() {
   cloudTimer = 0;
 }
 
-
-function deleteObstacle(obs) {
-  if ((obs.x + obs.w) < 0)
-    obstacles.shift();
+function addTerrain() {
+  randTerrainAddition = floor(random(70));
+  terrains.push(new Terrain());
+  terrainTimer = 0;
+  console.log("Terrain Added");
 }
 
-function deleteClouds(deadCloud) {
-  if ((deadCloud.x + deadCloud.w) < 0) {
-    clouds.shift();
-    //console.log("cloud deleted");
+
+function deleteObstacle(i) {
+  if ((obstacles[i].x + obstacles[i].w) < 0)
+    obstacles.splice(i, 1);
+}
+
+function deleteClouds(i) {
+  if ((clouds[i].x + clouds[i].w) < 0) {
+    clouds.splice(i, 1);
   }
 }
 
-function createDirt(n){
+function deleteTerrain(i) {
+  if ((terrains[i].x + terrains[i].w) < 0) {
+    terrains.splice(i, 1);
+  }
+}
+
+function createDirt(n) {
   for (let i = 0; i < n; i++) {
     dirts.push(new Dirt())
   }
@@ -198,6 +232,7 @@ function resetParameters() {
   dino.gravity = 2;
   dino.y = dino.base;
   obstacles = [];
+  terrains= [];
   obstacleTimer = 0;
   randAddition = 0;
   dino.dead = false;
@@ -209,6 +244,9 @@ function gameOverAnimation() {
   dino.show();
   dino.move();
 
+  for (let t of terrains) {
+    t.show();
+  }
   for (let c of obstacles) {
     c.vx = 0;
     c.show();
@@ -217,6 +255,7 @@ function gameOverAnimation() {
   for (let d of dirts) {
     d.show();
   }
+
   push();
   imageMode(CENTER);
   image(replayButton, width / 2, height / 2, 60, 60);

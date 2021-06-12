@@ -4,11 +4,11 @@ class Dirt {
 		this.x = floor(random(width));
 		this.y = floor(random(ground, refFrame));
 		this.vx = speed;
-		
+
 	}
 
 	move() {
-			this.x -= this.vx
+		this.x -= this.vx
 		if (this.x + this.l <= 0) {
 			this.x = width;
 		}
@@ -24,8 +24,20 @@ class Dirt {
 	}
 }
 
-class Texture {
+class Terrain {
 	constructor() {
+		this.h = 12;
+		this.w = 70;
+		this.x = width;
+		this.y = ground - this.h;
+		this.vx = speed;
+	}
 
+	show() {
+		image(terrain_1, this.x, this.y);
+	}
+
+	move() {
+		this.x -= this.vx;
 	}
 }
