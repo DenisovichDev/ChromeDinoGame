@@ -2,7 +2,6 @@ class Cacti {
 
   constructor(t) {
     this.type = t;
-    this.vx = speed;
     
     switch (this.type) {
       case 0: //small cactus
@@ -24,7 +23,7 @@ class Cacti {
   }
 
   move() {
-    this.x -= this.vx;
+    this.x -= speed;
   }
 
   show() {

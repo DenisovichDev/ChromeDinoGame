@@ -25,6 +25,11 @@ let ground;
 let refFrame;
 let speed = 15;
 
+let scoreInt = 0;
+let highScoreInt = 0;
+let highScore = '00000'
+let score = '00000'
+
 
 
 function preload() {
@@ -42,6 +47,8 @@ function preload() {
   terrain_1 = loadImage('images/terrain_1.png')
   terrain_2 = loadImage('images/terrain_2.png')
 
+  font = loadFont('font/PressStart2P-Regular.ttf');
+
 }
 
 function setup() {
@@ -54,6 +61,9 @@ function setup() {
   dino = new Dino();
 
   createDirt(windowWidth * dirtDensityInPerPixels);
+
+  textFont(font);
+  textSize(25);
 
 }
 
@@ -90,11 +100,9 @@ let randTerrainAddition = 70;
 let minTimeBetweenTerrains = 20;
 
 function draw() {
-  console.log(terrains.length)
   updateObstacles();
   updateClouds();
   updateTerrain();
-
 
   background(255);
 
@@ -105,6 +113,12 @@ function draw() {
     deleteClouds(i);
   }
 
+  // Printing Score:
+  if (frameCount%4 == 0){
+    takeScore();
+    speed += 0.01
+  }
+  text('HI: ' + highScore + ' ' + score, width - 400, height / 5);
 
   // The ground --------------------------------
   push();
@@ -140,7 +154,6 @@ function draw() {
         console.log('game over');
         dino.dead = true;
         dino.gravity = 0;
-        dino.vy = 0;
       }
 
       deleteObstacle(i);
@@ -156,10 +169,12 @@ function draw() {
 }
 
 function updateObstacles() {
-  obstacleTimer++;
+  if (!dino.dead) {
+    obstacleTimer++;
 
-  if (obstacleTimer > minTimeBetweenObstacles + randAddition) {
-    addObstacles();
+    if (obstacleTimer > minTimeBetweenObstacles + randAddition) {
+      addObstacles();
+    }
   }
 }
 
@@ -172,10 +187,12 @@ function updateClouds() {
 }
 
 function updateTerrain() {
-  terrainTimer++;
+  if (!dino.dead) {
+    terrainTimer++;
 
-  if (terrainTimer > minTimeBetweenTerrains + randTerrainAddition) {
-    addTerrain();
+    if (terrainTimer > minTimeBetweenTerrains + randTerrainAddition) {
+      addTerrain();
+    }
   }
 }
 
@@ -196,7 +213,6 @@ function addTerrain() {
   randTerrainAddition = floor(random(70));
   terrains.push(new Terrain());
   terrainTimer = 0;
-  console.log("Terrain Added");
 }
 
 
@@ -232,6 +248,7 @@ function resetParameters() {
   terrains = [];
   obstacleTimer = 0;
   randAddition = 0;
+  speed = 15;
   dino.dead = false;
 
 }
@@ -247,9 +264,7 @@ function gameOverAnimation() {
   dino.move();
 
   for (let c of obstacles) {
-    c.vx = 0;
     c.show();
-    c.move();
   }
 
 
@@ -259,4 +274,24 @@ function gameOverAnimation() {
   image(gameOverText, width / 2, height / 3);
   pop();
 
+}
+
+function takeScore() {
+  if (!dino.dead) {
+    scoreInt += 1;
+    score = fiveDigitStringNumber(scoreInt);
+    if (scoreInt > highScoreInt) {
+      highScoreInt = scoreInt;
+      highScore = score;
+    }
+  } else {
+    scoreInt = 0;
+  }
+}
+
+function fiveDigitStringNumber(num) {
+  numString = num.toString();
+  numOfZeroes = 5 - numString.length;
+  zeroes = '0'.repeat(numOfZeroes);
+  return (zeroes + numString);
 }
