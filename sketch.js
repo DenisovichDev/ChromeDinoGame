@@ -261,7 +261,6 @@ function gameOverAnimation() {
     t.show();
   }
   dino.show();
-  dino.move();
 
   for (let c of obstacles) {
     c.show();
