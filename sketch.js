@@ -76,11 +76,11 @@ function keyPressed() {
   }
 }
 
-function mousePressed() {
-  if (!dino.dead && !dino.jumping) {
-    dino.jump();
-  }
-}
+// function mousePressed() {
+//   if (!dino.dead && !dino.jumping) {
+//     dino.jump();
+//   }
+// }
 
 // Important variables for reapeating objects 
 
