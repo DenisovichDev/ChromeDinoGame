@@ -8,5 +8,5 @@ This is a clone of the classic chrome dino game that the fortunate people of the
 
 ### Checkout More!
 
--   [My Website](https://denisovichdev.github.io)
+-	[Link-Tree](https://denisovichdev.github.io/link-tree)
 -   [Twitter](https://twitter.com/denisovich_py)
